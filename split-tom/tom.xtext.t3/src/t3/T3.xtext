@@ -1,0 +1,105 @@
+grammar t3.T3
+//with org.eclipse.xtext.xbase.Xbase
+with tom.TomModel
+
+import "http://www.tom3.tom/tom"
+//import "http://www.eclipse.org/xtext/xbase/Xbase" as xbase
+
+
+Tom	:('%package' namespace=PackageName)? blocs+=Block*;
+
+//namespace for tom:
+/*
+ * java : package
+ * c++ : namespace
+ */
+PackageName : ID('.'ID)*;
+
+Block:
+	IncludeConstruct
+|	ImportConstruct	
+|	StrategyConstruct
+|	Function
+|	GomConstruct
+|	Callback
+|	TypeTerm
+|	Transformation
+;
+
+//function : converted in host function
+Function : '%function' (type=[Type]|'void') name=ID args=AlgebraicsTypePrefix '{'statements+=Statement*'}';
+
+//callack : function implemented in host code in an other file, an interface is generated for the callbacks.
+Callback :{Callback} '%callback''{'
+	operations+=CallbackDefinition*
+'}';
+
+CallbackDefinition: (type=[Type]|'void') name=ID args=AlgebraicsTypePrefix
+;
+
+//gom
+GomConstruct :{GomConstruct}	'%gom' ('(' option=ID ')')? '{'
+	'module' name=ID ('imports' imports+=[Type]*)? 
+	'abstract syntax' definitions+=Definition*
+'}';
+Definition : TypeDefinition | HookDefinition;
+HookDefinition : HookModuleDefinition | HookTypeDefinition | HookOperatorDefinition;
+TypeDefinition	:	name=ID '=' '|'? opDefinition+=OperatorDefinition (=>'|' opDefinition+=OperatorDefinition)*;	
+OperatorDefinition : name=ID args=(AlgebraicsTypeSuffix|ArgumentsList)?;
+HookModuleDefinition	: 'module' hookType=[GomConstruct] ':' hookOperation=HookOperation;
+HookTypeDefinition : 'sort' hookType=[TypeDefinition] ':' hookOperation=HookOperation;
+HookOperatorDefinition : hookType=[OperatorDefinition]':' hookOperation=HookOperation;
+
+HookOperation:
+	Hook_Rules
+|	Hook_Graphrules
+|	Hook_Make
+|	Hook_Make_Insert
+|	Hook_Make_Empty
+|	Hook_Free
+|	Hook_FL
+|	Hook_AU
+|	Hook_Interface
+|	Hook_Imports
+|	Hook_Block
+;
+
+Hook_Rules       	:{Hook_Rules}	'rules' '(' ')' '{' rules+=Rule* '}';
+Hook_Graphrules  	:	'graphrules' '(' name=ID ',' mode=ID ')''{' graphRules+=GraphRule* '}';
+
+Hook_Make :name='make' args=ArgumentsOp '{'statements+=Statement*'}';
+Hook_Make_Insert :name='make_insert' args=ArgumentsOp '{'statements+=Statement*'}';
+Hook_Make_Empty :name='empty' '(' ')' '{'statements+=Statement*'}';
+Hook_Free :name='Free' '('')' '{''}';
+Hook_FL :name='FL' '('')' '{''}';
+Hook_AU :name=('AU'|'ACU') '('')' '{'term=Term'}';
+Hook_Interface :name='interface''('')' '{''}';
+Hook_Imports :name='import''('')' '{''}';
+Hook_Block :name='block''('')''{'statements+=Statement*'}';
+
+Rule			:	rulePattern=RulePattern '->' term=Term ('if' cond=Condition)?;
+RulePattern	:	{NamedRulePattern} name=ID '@' plainRulePattern=PlainPatternRule | PlainPatternRule;
+PlainPatternRule returns RulePattern : 
+	{AntiRulePattern} '!' pattern=PlainRulePattern 
+|	PlainRulePattern
+|	 JokerPattern 
+|	 AnyPattern
+;
+PlainRulePattern returns RulePattern: PlainPatternConst | PlainPatternVariableList | PlainPatternVariable | PlainRulePatternOperation;
+PlainRulePatternOperation : heads=OperationList '('(rules+=RulePattern ( ',' rules+=RulePattern )*)?')';
+
+GraphRule		:	termcond=TermGraph '->' termGraph=TermGraph ('if' cond=Condition)?;
+TermGraph : ( name=ID ':' )? termGraph=PlainTermGraph;
+PlainTermGraph : TermGraphVariable | TermGraphFunc;
+TermGraphVariable : label?='&'? name=ID ;
+TermGraphFunc : head=OperationList'('(terms+=TermGraph ( =>',' terms+=TermGraph )*)?')';
+
+
+Condition :ConditionAnd ( {ConditionOr.left = current} '||' right = ConditionAnd )*;
+ConditionAnd returns Condition: ConditionBase ( {ConditionAnd.left = current} '&&' right = ConditionBase )*;
+ConditionBase returns Condition:
+	{ConditionP} '('condition=Condition')'
+//Non LL Term-RulePattern
+| 	{ConditionRule} rule=RulePattern '<<' term=Term  
+| 	{ConditionOp} left=Term operator=RelOperator right=Term
+;

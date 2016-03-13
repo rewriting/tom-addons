@@ -1,0 +1,47 @@
+grammar tom3.Tom with tom.TomModel
+
+import "http://www.tom3.tom/tom"
+
+Tom : blocs+=Block*;
+
+IncludeConstruct : '%include' '{' importURI=URI '.' ext=ID '}';
+
+Block :
+	IncludeConstruct
+|	TypeTerm
+|	StrategyConstruct
+|	HostCode
+|	Operator
+|	OperatorList
+|	OperatorArray
+;
+	
+//op
+Operator returns Operator: '%op' type=[Type] name=ID args=AlgebraicsTypeSuffix '{' 
+	keys+=(KeywordGetSlot | KeywordGetDefault | KeywordIsFsym | KeywordMake | KeywordImplement )*
+'}';
+
+KeywordIsFsym returns KeyWord		: name='is_fsym' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordGetSlot returns KeyWord		: name='get_slot' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordGetDefault returns KeyWord 	: name='get_default' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordMake returns KeyWord			: name='make' (args=ArgumentsOp)? '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordImplement returns KeyWord  	: name='implement' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}'; 
+
+OperatorList returns OperatorList: '%oplist' type=[Type] name=ID args=ArgumentsList
+	'{' keys+=KeywordIsFsym 
+		keys+=(KeywordIsEmpty | KeywordGetTail | KeywordGetHead | KeywordMakeInsert | KeywordMakeEmptyList )* '}';
+
+KeywordGetHead returns KeyWord			: name='get_head' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordGetTail returns KeyWord			: name='get_tail' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordIsEmpty returns KeyWord			: name='is_empty' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordMakeEmptyList returns KeyWord	: name='make_empty' ('(' ')')? '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordMakeInsert returns KeyWord		: name='make_insert' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';	
+
+OperatorArray returns OperatorArray: '%oparray' type=[Type] name=ID args=ArgumentsList
+	'{' keys+=KeywordIsFsym 
+		keys+=(KeywordGetSize | KeywordMakeAppend | KeywordGetElement | KeywordMakeEmptyArray)* '}';
+
+KeywordGetElement returns KeyWord		: name='get_element' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordGetSize returns KeyWord			: name='get_size' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordMakeEmptyArray returns KeyWord	: name='make_empty' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordMakeAppend returns KeyWord		: name='make_append' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';

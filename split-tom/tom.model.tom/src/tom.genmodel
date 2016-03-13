@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/tom.model.tom/src" modelPluginID="tom.model.tom"
+    modelName="Tom" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>tom.ecore</foreignModel>
+  <genPackages prefix="Tom" disposableProviderFactory="true" ecorePackage="tom.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="tom.ecore#//RelOperator">
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/inf"/>
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/infeg"/>
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/eg"/>
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/supeg"/>
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/sup"/>
+      <genEnumLiterals ecoreEnumLiteral="tom.ecore#//RelOperator/neg"/>
+    </genEnums>
+    <genClasses ecoreClass="tom.ecore#//Expression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Expression/call"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Tom">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Tom/namespace"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Tom/blocs"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Context"/>
+    <genClasses ecoreClass="tom.ecore#//Linkable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Linkable/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Type">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//Type/extend"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Operation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//Operation/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Operation/args"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Variable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//Variable/type"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//VariableSimple"/>
+    <genClasses ecoreClass="tom.ecore#//VariableList"/>
+    <genClasses ecoreClass="tom.ecore#//Block"/>
+    <genClasses ecoreClass="tom.ecore#//Function">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//Function/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Function/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Function/statements"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Callback">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Callback/operations"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//CallbackDefinition"/>
+    <genClasses ecoreClass="tom.ecore#//Arguments">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Arguments/args"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Argument"/>
+    <genClasses ecoreClass="tom.ecore#//ArgumentTypeSuffix"/>
+    <genClasses ecoreClass="tom.ecore#//ArgumentTypePrefix"/>
+    <genClasses ecoreClass="tom.ecore#//IncludeConstruct">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//IncludeConstruct/importURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//IncludeConstruct/ext"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Statement"/>
+    <genClasses ecoreClass="tom.ecore#//Term"/>
+    <genClasses ecoreClass="tom.ecore#//TermVariable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//TermVariable/var"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//TermOperation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//TermOperation/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TermOperation/terms"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Return">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Return/return"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//MatchConsctruct"/>
+    <genClasses ecoreClass="tom.ecore#//MatchPattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//MatchPattern/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//MatchPattern/patternActions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ArgumentMatch">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//ArgumentMatch/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//ArgumentMatch/var"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PatternAction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//PatternAction/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PatternAction/patterns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PatternAction/statements"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintPattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintPattern/constraintActions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintAction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintAction/constraint"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintAction/statements"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Pattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Pattern/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Pattern/plainPattern"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//AntiPattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//AntiPattern/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PlainPattern"/>
+    <genClasses ecoreClass="tom.ecore#//PlainPatternConst">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//PlainPatternConst/head"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PlainPatternVariable"/>
+    <genClasses ecoreClass="tom.ecore#//JokerPattern"/>
+    <genClasses ecoreClass="tom.ecore#//PlainPatternOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PlainPatternOperation/heads"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PlainPatternOperation/list"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//List"/>
+    <genClasses ecoreClass="tom.ecore#//OperationList">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//OperationList/heads"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//OperationList/log"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ExplicitTermList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ExplicitTermList/patterns"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PlainPatternVariableList"/>
+    <genClasses ecoreClass="tom.ecore#//AnyPattern"/>
+    <genClasses ecoreClass="tom.ecore#//ImplicitPairList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ImplicitPairList/patterns"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PairPattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PairPattern/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//StrategyConstruct">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//StrategyConstruct/backquote"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//StrategyConstruct/terms"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//StrategyConstruct/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//StrategyConstruct/visitlist"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//StrategyVisit">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//StrategyVisit/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//StrategyVisit/actions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//VisitAction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//VisitAction/pattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//VisitAction/statements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//VisitAction/term"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PatternList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PatternList/patterns"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//PatternList/rel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PatternList/constraint"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Constraint">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Constraint/constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintAnd">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintAnd/constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintBase"/>
+    <genClasses ecoreClass="tom.ecore#//ConstraintP">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintP/constraint"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintMatch">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintMatch/pattern"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintMatch/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintMatch/term"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConstraintOp">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintOp/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//ConstraintOp/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConstraintOp/right"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//GomConstruct">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//GomConstruct/option"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//GomConstruct/imports"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//GomConstruct/definitions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Definition"/>
+    <genClasses ecoreClass="tom.ecore#//TypeDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TypeDefinition/opDefinition"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//OperatorDefinition"/>
+    <genClasses ecoreClass="tom.ecore#//ArgumentsList">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//ArgumentsList/type"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//HookDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//HookDefinition/hookOperation"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//HookModuleDefinition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//HookModuleDefinition/hookType"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//HookTypeDefinition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//HookTypeDefinition/hookType"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//HookOperatorDefinition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//HookOperatorDefinition/hookType"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//HookOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//HookOperation/hote"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Rules">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Hook_Rules/rules"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Graphrules">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Hook_Graphrules/mode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Hook_Graphrules/graphRules"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Make">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Hook_Make/args"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Make_Insert">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//Hook_Make_Insert/args"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Make_Empty"/>
+    <genClasses ecoreClass="tom.ecore#//Hook_Free"/>
+    <genClasses ecoreClass="tom.ecore#//Hook_FL"/>
+    <genClasses ecoreClass="tom.ecore#//Hook_AU">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Hook_AU/term"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Hook_Interface"/>
+    <genClasses ecoreClass="tom.ecore#//Hook_Imports"/>
+    <genClasses ecoreClass="tom.ecore#//Hook_Block"/>
+    <genClasses ecoreClass="tom.ecore#//Rule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Rule/rulePattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Rule/term"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Rule/cond"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//RulePattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//RulePattern/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//RulePattern/plainRulePattern"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//AntiRulePattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//AntiRulePattern/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PlainRulePattern"/>
+    <genClasses ecoreClass="tom.ecore#//PlainRulePatternOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PlainRulePatternOperation/heads"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//PlainRulePatternOperation/rules"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//GraphRule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//GraphRule/termcond"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//GraphRule/termGraph"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//GraphRule/cond"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//TermGraph">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//TermGraph/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TermGraph/termGraph"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//PlainTermGraph"/>
+    <genClasses ecoreClass="tom.ecore#//TermGraphVariable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//TermGraphVariable/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//TermGraphVariable/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//TermGraphFunc">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TermGraphFunc/head"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TermGraphFunc/terms"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Condition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Condition/conditions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConditionAnd">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionAnd/conditions"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConditionBase"/>
+    <genClasses ecoreClass="tom.ecore#//ConditionP">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionP/condition"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConditionRule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionRule/rule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionRule/term"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//ConditionOp">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionOp/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//ConditionOp/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//ConditionOp/right"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLTerm"/>
+    <genClasses ecoreClass="tom.ecore#//XMLTermSimple">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermSimple/nameList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermSimple/attrList"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLTermDouble">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermDouble/nameList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermDouble/attrList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermDouble/childs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLTermDouble/list"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLTermText">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLTermText/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLTermComment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLTermComment/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLTermProcess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLTermProcess/name1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLTermProcess/name2"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLNameList">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLNameList/XMLName"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLAttrList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLAttrList/attrs"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLAttribute"/>
+    <genClasses ecoreClass="tom.ecore#//XMLAttribute1">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute1/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLAttribute2">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute2/attributeName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute2/annotedName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute2/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLAttribute3">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute3/attributeName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute3/annotedName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//XMLAttribute3/name"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//XMLChilds">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//XMLChilds/terms"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//TypeTerm">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//TypeTerm/hote"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tom.ecore#//TypeTerm/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//TypeTerm/keys"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//KeyWord">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//KeyWord/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//KeyWord/args"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tom.ecore#//KeyWord/hote"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//Operator">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//Operator/keys"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//OperatorList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//OperatorList/keys"/>
+    </genClasses>
+    <genClasses ecoreClass="tom.ecore#//OperatorArray">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tom.ecore#//OperatorArray/keys"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

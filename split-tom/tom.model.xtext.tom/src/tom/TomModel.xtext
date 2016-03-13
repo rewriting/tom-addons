@@ -1,0 +1,179 @@
+grammar tom.TomModel
+//with org.eclipse.xtext.xbase.Xbase
+with org.eclipse.xtext.common.Terminals
+
+import "http://www.tom3.tom/tom"
+
+Block:
+	IncludeConstruct	
+|	StrategyConstruct
+;
+
+IncludeConstruct : '%include' '{' importURI=URI ('.' ext=ID)? '}';
+URI : ('.''.''/')*ID('/'ID)*;
+
+//import for type ex
+//java: import java.Type;
+//c++ : using namespace std::type;
+//ada : with Ada.Type;   use Ada.Type;
+ImportConstruct:'%import''{'type=[Type]'}';
+
+Statement:
+	MatchConsctruct
+|	Expression
+|	HostCode
+|	Return
+|	Tracelink
+;
+
+//mini language for tom /////////////////////////////////////////////////////////
+Expression : Call|Affectation|Declaration;
+
+Call:call=TermOperation;
+Declaration :type=[Type] name=ID '=' value=Term;
+Affectation: variable=[Variable] '=' value=Term;
+
+Return : 'return' return=Term;
+
+//host code inline
+HostCode:code=HOSTCODETERM;
+
+terminal HOSTCODETERM:'//%hote'->'//%hote';
+
+HOTE : (INT|ID|STRING|
+'<'|'>'|'<='|'>='|'=='|'!='|
+'|'|'||'|'&'|'&&'|'+'|
+'?'|'!'|'@'|'/'|'*'|'_'|'_*'|'`'|
+'extends'|'implement'|
+'equals'|'make'|'null'|
+'['|']'|'('|')'|'.'|':'|';'|','|ANY_OTHER)*;
+//////////////////////////////////////////////////////////////////////////////////
+
+
+//Term
+Term : SimpleTerm ({TermSum.left=current} '+' right=SimpleTerm)* ;
+SimpleTerm returns Term:TermVariable | TermOperation | TermConst | TermNull | Resolve;
+TermConst : int=INT|string=STRING;
+TermNull :{TermNull} 'null'; 
+
+TermVariable : var=[VariableSimple] | var=[VariableList|VListName];
+TermOperation : op=[Operation] '('(terms+=Term(=>',' terms+=Term)*)?')';
+
+//TypeTerm
+TypeTerm returns TypeTerm: '%typeterm' name=ID ('extends' type=[Type])? '{'
+			'implement' '{' hote=HOTE '}'
+			keys+=KeywordIsSort? 
+			keys+=KeywordEquals?
+		'}';
+
+KeywordIsSort returns KeyWord : name='is_sort' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';
+KeywordEquals returns KeyWord 	:name='equals' args=ArgumentsOp '{'hote=(HOTE|HOSTCODETERM)'}';	
+
+//matchs
+MatchConsctruct : '%match' (	MatchPattern | 	ConstraintPattern );
+MatchPattern : '(' args+=ArgumentMatch ( =>',' args+=ArgumentMatch )* ')' '{' patternActions+=PatternAction* '}';
+ArgumentMatch : type=[Type]? var=[Variable];
+PatternAction	:	(name=ID ':')? patterns=PatternList '->' '{'statements+=Statement*'}';
+ConstraintPattern :{ConstraintPattern} ('(' ')')?'{' constraintActions+=ConstraintAction* '}' ;
+ConstraintAction	:	constraint=Constraint '->' '{'statements+=Statement*'}';
+
+HeadSymbol : STRING|INT;
+enum RelOperator : inf='<' | infeg='<=' | eg='==' | supeg='>=' | sup='>' | neg='!=';
+
+//Pattern
+Pattern	returns Pattern: {NamedPattern} name=ID '@' plainPattern=PlainPattern | PlainPattern;
+PlainPattern returns Pattern:
+	{AntiPattern}'!' pattern=PlainPatternOperation
+|	PlainPatternConst  
+| 	PlainPatternVariable
+| 	JokerPattern
+| 	AnyPattern 
+| 	PlainPatternVariableList
+| 	PlainPatternOperation
+|	XMLTerm
+;
+
+PlainPatternConst: head=HeadSymbol;
+PlainPatternVariable: name=ID;
+PlainPatternVariableList: name=VListName;
+
+JokerPattern:{JokerPattern} '_';
+AnyPattern:{AnyPattern} '_*';
+
+VListName : ID'*';
+
+PlainPatternOperation : heads=OperationList list=List;
+List : ExplicitTermList | ImplicitPairList;
+OperationList : heads+=[Operation] log?='?'? | '('heads+=[Operation]( =>'|' heads+=[Operation] )+')';				
+ExplicitTermList :{ExplicitTermList}'('(patterns+=Pattern ( =>',' patterns+=Pattern)*)?')';
+ImplicitPairList :{ImplicitPairList}'['(patterns+=PairPattern ( =>',' patterns+=PairPattern )*)?']';
+PairPattern : name=ID '=' pattern=Pattern;
+
+//Strategy
+
+StrategyConstruct	:	
+'%strategy' name=ID args=Arguments 'extends' implement=TermOperation '{' 
+	visitlist+=StrategyVisit* 
+'}' ;
+StrategyVisit	: 'visit' type=[Type] '{' actions+=VisitAction* '}';
+VisitAction	: pattern=PatternList '->' ('{'statements+=Statement*'}' | term=Term );
+
+PatternList :patterns+=Pattern( =>',' patterns+=Pattern )* (rel=('||'|'&&') constraint=Constraint )?;
+Constraint :ConstraintAnd ( {ConstraintOr.left = current} '||' right = ConstraintAnd )*;
+ConstraintAnd returns Constraint: ConstraintBase ( {ConstraintAnd.left = current} '&&' right = ConstraintBase )*;
+ConstraintBase returns Constraint:
+	{ConstraintP} '(' constraint=Constraint ')'
+//Non LL Term-Pattern
+| 	{ConstraintMatch} pattern=Pattern '<<' type=[Type]? term=Term 
+| 	{ConstraintOp} left=Term operator=RelOperator right=Term
+;
+
+//Arguments
+Arguments :{Arguments} 
+'('(args+=ArgumentTypePrefix ( =>',' args+=ArgumentTypePrefix )*|
+	args+=ArgumentTypeSuffix ( =>',' args+=ArgumentTypeSuffix )*
+)?')';
+AlgebraicsTypePrefix returns Arguments:{Arguments} '('(args+=ArgumentTypePrefix ( =>',' args+=ArgumentTypePrefix )*)?')';
+AlgebraicsTypeSuffix returns Arguments:{Arguments} '('(args+=ArgumentTypeSuffix ( =>',' args+=ArgumentTypeSuffix )*)?')';
+ArgumentTypeSuffix : name=ID ':' type=[Type];
+ArgumentTypePrefix : type=[Type] name=ID;
+ArgumentsList : '('type=[Type]'*'')';
+ArgumentsOp returns Arguments:{Arguments} '('(args+=Argument (','  args+=Argument)*)?')';
+Argument : name=ID;
+
+//Transformation
+
+Transformation : '%transformation' name=ID args=Arguments ':' fileFrom=STRING '->' fileTo=STRING '{'
+	elementaryTranformations+=ElementaryTransformation*
+'}';
+ElementaryTransformation: 'definition' name=ID 'traversal' implement=TermOperation '{'
+	elementaryTransformationRules+=ElementaryTransformationRule*	
+'}';
+
+ElementaryTransformationRule:pattern=Pattern '->' '{'statements+=Statement*'}';
+
+Tracelink : '%tracelink' '('name=ID':'type=[Type]','term=Term')';
+Resolve:'%resolve''('source=[Variable]':'type=[Type]','target=[Tracelink]')';
+
+//XML
+XMLTerm	: XMLTermSimple | XMLTermDouble | XMLTermText | XMLTermComment | XMLTermProcess;
+XMLTermSimple : '<' nameList=XMLNameList attrList=XMLAttrList '/>';
+XMLTermDouble :	'<' nameList=XMLNameList attrList=XMLAttrList '>' childs=XMLChilds '</' list=XMLNameList '>';
+XMLTermText	:'#TEXT' '(' name=(ID|STRING) ')';
+XMLTermComment:	'#COMMENT' '(' name=(ID|STRING) ')';
+XMLTermProcess:	'#PROCESSING-INSTRUCTION' '(' name1=(ID|STRING) ',' name2=(ID|STRING) ')';
+XMLNameList	:'(' XMLName+=ID ( '∣' XMLName+=ID )* ')';
+
+XMLAttrList	: AttrCrochet | AttrP | AttrSP;	
+AttrCrochet returns XMLAttrList:{XMLAttrList} '[' ( attrs+=XMLAttribute (',' attrs+=XMLAttribute)* )? ']';
+AttrP returns XMLAttrList:{XMLAttrList} '('(attrs+=XMLAttribute (',' attrs+=XMLAttribute)*)?')';
+AttrSP returns XMLAttrList:{XMLAttrList} attrs+=XMLAttribute*;
+
+XMLAttribute :XMLAttribute1 | XMLAttribute2 | XMLAttribute3;
+XMLAttribute1: name=ID '*';
+XMLAttribute2: attributeName=ID '=' (annotedName=ID '@')? name=(ID|STRING);
+XMLAttribute3: (attributeName=ID '@')? '_' '=' (annotedName=ID '@')? name=(ID|STRING);
+
+XMLChilds	: XMLChildsS | XMLChildsC ;
+XMLChildsS returns XMLChilds:{XMLChilds} terms+=Term*;
+XMLChildsC returns XMLChilds: '[' terms+=Term ( ',' terms+=Term )* ']';
