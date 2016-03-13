@@ -1,0 +1,5 @@
+%typeterm EObject {
+  implement { org.eclipse.emf.ecore.EObject }
+  is_sort(t) { $t instanceof org.eclipse.emf.ecore.EObject }
+  equals(l1,l2) { $l1.equals($l2) }
+}

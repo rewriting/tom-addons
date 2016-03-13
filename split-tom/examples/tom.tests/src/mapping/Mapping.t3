@@ -1,0 +1,48 @@
+%package mapping
+
+%include{util/LinkedList}
+%include{util/types/LinkedList}
+%include{int.tom}
+%include{util/types/Object}
+%include{sl/basic.tom}
+%include{sl/composed.tom}
+%include{sl}
+
+%callback{
+	void iteration(Object x)
+	void doublon(Object x)
+	void seul(Object x)
+	Object getTermClass(Object t)
+	void visitA()
+	void visitB()
+}
+
+%function void match1(LinkedList l){
+	%match(l) {
+		concLinkedList(_*,x,_*) -> { iteration(x) }
+		concLinkedList(_*,x,_*,x,_*) -> { doublon(x) }
+	}
+}
+
+%function void match2(Object l1, Object l2){
+	%match(LinkedList l1, LinkedList l2) {
+	   concLinkedList(_*,x,_*), !concLinkedList(_*,x,_*,x,_*) -> { seul(x) }
+	}
+}
+
+%function Object getClass(Object t){
+	
+	return getTermClass(t)
+}
+
+%gom{
+	module term abstract syntax
+	Term = a() | b(z:Term) | c()
+}
+
+%strategy strat() extends Identity(){
+	visit Term {
+		a()->{visitA()}
+		b(t)->t
+	}
+}

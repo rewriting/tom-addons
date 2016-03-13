@@ -1,0 +1,209 @@
+ %package transfo
+ 
+ %include{ sl.tom }
+ %include{ LinkClass.tom }
+ %include{emf/EList.tom}
+ %include{sl/composed.tom}
+ %include{sl/basic.tom}
+ %include{Strategy.tom}
+ %include{string.tom} 
+
+ %include{ mappings/DDMMPetriNetPackage.tom }
+ %include{ mappings/DDMMSimplePDLPackage.tom }
+ %include{ mappings/EDMMPetriNetPackage.tom }
+ %include{ mappings/EDMMSimplePDLPackage.tom }
+ %include{ mappings/SDMMPetriNetPackage.tom }
+ %include{ mappings/SDMMSimplePDLPackage.tom }
+ %include{ mappings/TM3PetriNetPackage.tom }
+ %include{ mappings/TM3SimplePDLPackage.tom}
+ %include{util/types/Collection.tom}
+ %include{emf/ecore.tom}
+ %include{emf/EObject.tom}
+ %include{emf/EList.tom}
+ 
+%import{Collection}
+%import{EClass}
+%import{EDataType}
+%import{EObject}
+%import{EStructuralFeature}
+%import{EList}
+//%import{ECrossReferenceAdapter}
+//%import{}
+//import org.eclipse.emf.ecore.EStructuralFeature;
+//import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+
+%import{WorkDefinition}
+%import{Arc}
+%import{Node}
+%import{PetriNet}
+%import{Place}
+%import{Transition}
+%import{PNScenario}
+ 
+ %typeterm SimplePDLToPetriNet { implement { transformation.SimplePDLToPetriNet }}
+  
+  %callback{
+  	void multiPrint(String s)
+  	void println(String s)
+  	void printArc(Place node1,Place node2)
+  }
+
+  %strategy PrintTransition() extends Identity() {
+    visit Transition {
+//      tr@ResolveWorkDefinitionTransition[tom_resolve_element_attribute_name=name] -> {
+//        println("tr resolve "+ name)
+//        return tr
+//      }
+//
+//      ptr@ResolveProcessTransition[tom_resolve_element_attribute_name=name] -> {
+//        println("tr process resolve "+name)
+//        return ptr
+//      }
+
+      Transition[name=name,incomings=sources,outgoings=targets] -> {
+        String s = " "
+        String t = " "
+        %match {
+         ArcEList(_*,Arc[kind=k,weight=w,source=node],_*) << sources && Place[name=placename]<< node -> {
+           //s =s+ placename + ((k==ArcKindread_arc())?"?":"*") + `w + " " 
+         }
+         ArcEList(_*,Arc[kind=k,weight=w,target=node],_*) << targets && Place[name=placename]<< node -> { 
+           //t += `placename + ((`k==`ArcKindread_arc())?"?":"*") + `w + " "; 
+         }
+        }
+        multiPrint("tr " + name + s + "->" + t)
+      }
+
+     
+    }
+  }
+  
+  %strategy PrintPlace() extends Identity() {
+    visit Place {
+//      pl@ResolveWorkDefinitionPlace[tom_resolve_element_attribute_name=name] -> {
+//        println("pl resolve " + name)
+//        return pl
+//      }
+
+      Place[name=name,initialMarking=w] && w!=0 -> {
+        multiPrint("pl " + name + " " + "(" + w + ")")
+      }
+
+    }
+  }
+  
+%function void callTopDown(Strategy s){
+	TopDown(s)
+}
+
+%function WorkDefinition makeWorkDefinition(Process  parent, EList  linksToPredecessors, EList  linksToSuccessors,  String  name, Process  process){
+	return WorkDefinition(parent,linksToPredecessors,linksToSuccessors,name,process)
+}
+
+%function WorkSequence makeWorkSequence(Process  parent, WorkSequenceType  linkType, WorkDefinition  predecessor, WorkDefinition  successor){
+	return WorkSequence( parent, linkType, predecessor, successor)
+}
+
+  %transformation SimplePDLToPetriNet(tom__linkClass:LinkClass,pn:PetriNet) : "metamodels/SimplePDLSemantics_updated.ecore" -> "metamodels/PetriNetSemantics_updated.ecore" {
+
+    definition P2PN traversal TopDown(P2PN(tom__linkClass,pn)) {
+      p@Process[name=name] -> {
+        Place p_ready  = Place(name + "_ready", pn,ArcEList(), ArcEList(), 1)
+        Place p_running  = Place(name + "_running", pn,ArcEList(), ArcEList(), 0)
+        Place p_finished  = Place(name + "_finished", pn,ArcEList(), ArcEList(), 0)
+        String n1 = name+"_start"
+        %tracelink(Processt_start:Transition, Transition(n1, pn,ArcEList(), ArcEList(), 1, 1))
+        n1 = name+"_finish"
+        %tracelink(Processt_finish:Transition, Transition(n1, pn,ArcEList(), ArcEList(), 1, 1))
+        
+        Arc(Processt_start, p_ready, pn,ArcKindnormal(), 1)
+        Arc(p_running, Processt_start, pn,ArcKindnormal(), 1)
+        Arc(Processt_finish, p_running, pn,ArcKindnormal(), 1)
+        Arc(p_finished, Processt_finish, pn,ArcKindnormal(), 1)
+//%hote
+        WorkDefinition from = `p.getFrom();
+        if (from!=null) {
+          Transition source = %resolve(from:WorkDefinition,t_start:Transition);
+          source.setNet(pn);
+          Arc tmpZoomIn = `Arc(p_ready,source,pn,ArcKindnormal(), 1);
+
+          Transition target = %resolve(from:WorkDefinition,t_finish:Transition);
+          target.setNet(pn);
+          Arc tmpZoomOut = `Arc(target,p_finished,pn,ArcKindread_arc(), 1);
+        }
+//%hote
+      }
+    }
+    
+
+    definition WD2PN traversal TopDown(WD2PN(tom__linkClass,pn)) {
+      wd@WorkDefinition[name=name] -> {
+        println("Je suis un A")
+        Place p_ready  = Place(name + "_ready", pn,ArcEList(), ArcEList(), 1)
+        String n1 = name+"_started"
+        %tracelink(WDp_started:Place, Place(n1, pn,ArcEList(), ArcEList(), 0))
+        Place p_running  = Place(name+"_running", pn,ArcEList(), ArcEList(), 0)
+        n1 = name+"_finished"
+        
+        
+		%tracelink(WDp_finished:Place, Place(n1, pn,ArcEList(), ArcEList(), 0))
+        n1 = name+"_start"
+        %tracelink(WDt_start:Transition, Transition(n1, pn,ArcEList(), ArcEList(), 1, 1)) 
+        
+        n1 = name+"_finish"
+        %tracelink(WDt_finish:Transition, Transition(n1, pn,ArcEList(), ArcEList(), 1, 1))
+
+        Arc(WDt_start, p_ready, pn,ArcKindnormal(), 1)
+        Arc(WDp_started, WDt_start, pn,ArcKindnormal(), 1)
+        Arc(p_running, WDt_start, pn,ArcKindnormal(), 1)
+        Arc(WDt_finish, p_running, pn,ArcKindnormal(), 1)
+        Arc(WDp_finished, WDt_finish, pn,ArcKindnormal(), 1)
+
+		Process parent = null
+//%hote
+        parent = `wd.getParent();
+//%hote
+        Transition source = %resolve(parent:Process,Processt_start)
+//%hote
+        source.setNet(pn);
+//%hote
+        Arc tmpDistribute = Arc(p_ready,source,pn,ArcKindnormal(), 1)
+
+        Transition target = %resolve(parent:Process,Processt_finish)
+//%hote
+        target.setNet(pn);
+//%hote
+        Arc tmpRejoin = Arc(target,WDp_finished,pn,ArcKindread_arc(), 1)
+      }
+    }
+
+    definition WS2PN traversal TopDown(WS2PN(tom__linkClass,pn)) {
+      ws@WorkSequence[predecessor=p,successor=s,linkType=linkType] -> {
+        Place source= null
+       	Transition target= null
+        WorkDefinition pre = p
+        WorkDefinition suc = s
+        %match(linkType) { 
+          (WorkSequenceTypefinishToFinish|WorkSequenceTypefinishToStart)[] -> {
+          	source = %resolve(pre:WorkDefinition,WDp_finished)
+          }
+          (WorkSequenceTypestartToStart|WorkSequenceTypestartToFinish)[]   -> { 
+          	source = %resolve(pre:WorkDefinition,WDp_started)
+          }
+
+          (WorkSequenceTypefinishToStart|WorkSequenceTypestartToStart)[]   -> { 
+          	target = %resolve(suc:WorkDefinition,WDt_start)
+          }
+          (WorkSequenceTypestartToFinish|WorkSequenceTypefinishToFinish)[] -> { 
+          	target = %resolve(suc:WorkDefinition,WDt_finish)
+          }
+        }
+//%hote
+        source.setNet(pn);
+        target.setNet(pn);
+//%hote
+        Arc tmp = Arc(target,source, pn,ArcKindread_arc(), 1) 
+      }
+    }
+  }
+  

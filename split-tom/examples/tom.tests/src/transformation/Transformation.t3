@@ -1,0 +1,6 @@
+%package transformation
+
+//%transformation SimplePDLToPetriNet(tom__linkClass:LinkClass,pn:PetriNet) : 
+//	"metamodels/SimplePDLSemantics_updated.ecore" -> "metamodels/PetriNetSemantics_updated.ecore" {
+//		
+//}

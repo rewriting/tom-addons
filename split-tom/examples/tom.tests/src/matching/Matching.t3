@@ -1,0 +1,49 @@
+%package matching
+
+%include{string.tom}
+
+%gom {
+    module Term
+    imports String
+    abstract syntax
+    Term = Variable(name:String)
+         | Appl(name:String, args:TermList)
+         | True()
+         | False()
+         | Match(pattern:Term, subject:Term)
+         | And(a1:Term, a2:Term)
+         | decomposeList(l1:TermList, l2:TermList)
+    TermList = cons(head:Term,tail:TermList )
+             | nil()
+
+    decomposeList:make(x,y) {
+      %match(x,y) {
+        nil(),nil() -> { return True() }
+        cons(h1,t1),cons(h2,t2) -> { return And(Match(h1,h2),decomposeList(t1,t2)) }
+      }
+    }
+    
+    Match:make(x,y) {
+       %match(x,y) {
+         // Delete
+         Appl(name,nil()),Appl(name,nil()) -> { return True() }
+         // Decompose
+         Appl(name,a1),Appl(name,a2) -> { return decomposeList(a1,a2) }
+         // SymbolClash
+         Appl(name1,args1),Appl(name2,args2) -> { return False()}
+       }
+    }
+
+    And:make(a,b) {
+      %match(a,b) {
+        False(),_ -> { return False() }
+        _,False() -> { return False() }
+        True(),x -> { return x }
+        x,True() -> { return x }
+        x,x -> { return x }
+      }
+    }
+  }
+  
+  
+  
