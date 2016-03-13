@@ -1,0 +1,60 @@
+New features for Tom:
+Compiling a X.t3 file generates a XTom.t file for Tom compilation
+and a XTomi.java interface for callback
+
+- %package  : namespace for tom
+- %import   : imports for tom
+- %function : function implemented in tom code
+- %callback : function implemented in host code
+	callback creates currently an instance attribute in the XTom.t file
+	TODO : create a static field or inject it.
+
+
+Projects:
+tom.model.tom : metamodel of Tom/Gom
+tom.model.xtext.tom(.sdk/.tests/.ui) : common rules for tom
+tom.xtext.t3(.sdk/.tests/.ui) : xtext editor for .t3 files
+tom.xtext.tom(.sdk/.tests/.ui) : xtext editor for .tom files
+
+////////////////////////////////////////////////////////////////
+
+tom.model.xtext.tom :
+
+validation : src/validation.Tom3Validator.java
+	check includes
+	check type hierarchy
+
+- scoping: src/scoping.TomModelScopeProvider.xtend
+	hide LocalVariable out of a Context container
+
+- imports: src/scoping.Tom3ImportsScopeProvider.java
+	manage included files
+
+- generator : src/generator.TomGenerator.xtend
+	interface to create a host code generator from tom model
+
+- generator : src/generator.java.TomGeneratorImpl.xtend
+	java generator implements TomGenerator
+
+- templates : tom.model.xtext.tom.ui/src/tom.ui.contenassist.TomTemplateProvider.xtend
+	show dinamically possible includes in the current directory
+
+////////////////////////////////////////////////////////////////
+tom.xtext.t3
+
+- generator : src/t3.generator.java.TomGenerator.xtend
+	generator for new features, extends TomGeneratorImpl
+
+- generator : src/t3.generator.T3Compiler.java
+	tom compiler from .t file to host code
+
+////////////////////////////////////////////////////////////////////////////////////
+a tom.properties file at the root of project specifies option for generator
+- imports : relative directory from project or absolute -- path for include construct
+- code : host code for compilation -- (currently only "j" for java is defined)
+- tom.xml : path for Tom.xml file
+- compile : call tom compiler during compilation : true for compile, any other to disable tom compilation
+	TODO: add other options for Tom compiler
+
+
+ 

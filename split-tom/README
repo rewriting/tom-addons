@@ -1,0 +1,42 @@
+Install Project
+
+1) import
+tom.model.tom	//ecore metamodel
+
+tom.model.xtext.tom // common base for tom
+tom.model.xtext.tom.sdk
+tom.model.xtext.tom.test
+tom.model.xtext.tom.ui
+
+tom.xtext.t3 // editor for .t3 files
+tom.xtext.t3.sdk
+tom.xtext.t3.tests
+tom.xtext.t3.ui
+
+tom.xtext.tom // editor for .tom files
+tom.xtext.tom.sdk
+tom.xtext.tom.tests
+tom.xtext.tom.ui
+
+2)generate articfact in
+tom.model.xtext.tom/src/tom/TomModel.xtext
+tom.xtext.t3/src/t3/T3.xtext
+tom.xtext.tom/src/tom3/Tom.xtext
+
+3)run eclipseApplication; import
+tomtest
+(or) tomtransformation
+
+/////////////////////////////////////////////////
+
+Example:
+-Mapping
+1)src/mapping/Mapping.t3 generate:
+ src-gen/MappingTom.t 
+ src-gen/mapping/MappingTomi.java
+ src-gen/mapping/MappingTom.java
+(+ gom class)
+
+2)run src/mapping/Mapping.java to execute the example
+
+
